@@ -16,7 +16,7 @@ private:
 
     vector<string> variablesLinguisticas;
 
-vector<vector<double>> datos;
+    vector<vector<double>> datos;
 
 public:
 
@@ -141,6 +141,36 @@ public:
         }
 
         return datos[fila][columna];
+    }
+
+    int getTerminosLinguisticosIndex(string clase,string termino)
+    {
+        int num = 0,j=0;
+        for (int i=0;i<variablesLinguisticas.size();i++)
+        {
+            if (atributos[i]==clase)
+            {
+                if (variablesLinguisticas[i] == termino )
+                {
+                    num = j;
+                }
+                j++;
+            }
+        }
+        return num;
+    }
+
+    double getFuzzyValue(int fila, string atributo, string termino)
+    {
+        double valor=0;
+        for (int i = 0;i< variablesLinguisticas.size(); i++)
+        {
+            if (atributos[i] == atributo && variablesLinguisticas[i] == termino)
+            {
+                valor = datos[fila][i];
+            }
+        }
+        return valor;
     }
 
 };

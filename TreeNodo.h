@@ -37,7 +37,7 @@ public:
         tipoNodo = nodeType;
     }
 
-    vector<TreeNode> getChildren() 
+    vector<TreeNode> getHijos() 
     {
         return hijos;
     }
@@ -47,7 +47,7 @@ public:
         return padre;
     }
 
-    string getTitle() 
+    string getTitulo() 
     {
         return titulo;
     }

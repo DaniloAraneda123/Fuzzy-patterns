@@ -1,5 +1,8 @@
 ﻿#pragma once
 #include <iostream>
+#include<fstream>
+#include<windows.h>
+#include <sstream>
 
 using namespace std;
 
@@ -10,32 +13,41 @@ private:
 	int num_datos;
 	int num_clusters;
 	int num_dimensiones;
-	int iteraciones;
-	double** grado_pertenencia;
+	int iteraciones=500;
+	double** grado_pertenencia= nullptr;
 	double epsilon;
 	double borrosidad;
-	double** data_puntos;
-	double** centroides;
+	double** data_puntos=nullptr;
+	double** centroides	=nullptr;
+	bool ejecucion;
 
 public:
+	FuzzyCMeans();
 
 	FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy, double** datos);
 
-	double** fcm();
+	double** fcm(bool verIteraciones);
 
 	bool guardarCentroides(string ruta);
 
-	void cargar_centroides(double** matriz);
+	void cargarCentroides(string matriz);
 
 	double** getCentroides();
 
 	double** getPertenencia();
 
+	void setData(double** datos);
+
+	double* evaluarDato(double* datos);
+
 private:
+	void imprimirIteracion(double max_dif,int iteracion);
 
 	void calcular_vectores_centroides();
 
 	double get_norm(int i, int j);
+
+	double get_norm(double* datos, int j);
 
 	double get_new_pertenecia(int i, int j);
 

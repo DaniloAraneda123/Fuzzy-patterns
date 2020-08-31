@@ -9,6 +9,11 @@ using namespace std;
 El disenio por contranto aun no es documentando en el codigo.
 */
 
+	FuzzyCMeans::FuzzyCMeans()
+	{
+		ejecucion = false;
+	}
+
 //Construcctor
 	FuzzyCMeans::FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy, double** datos)
 	{
@@ -52,6 +57,7 @@ El disenio por contranto aun no es documentando en el codigo.
 			}
 			grado_pertenencia[i][0] = 1.0 - s;
 		}
+		ejecucion = false;
 	}
 
 
@@ -59,70 +65,190 @@ El disenio por contranto aun no es documentando en el codigo.
 	*mientras la el error sea mayor que el permitido o  el numero de iteraciones actual es menor que el limite,
 	El algoritmo seguira recalculando la posicion de los centroides.
 	*/
-	double** FuzzyCMeans::fcm()
+	double** FuzzyCMeans::fcm(bool verIteraciones)
 	{
 		double max_dif=0;
-		int iteracion = 0;
-
-		cout << "num_data_points: " << num_datos << "    num_clusters:  " << num_clusters << "   num_dimensions:  " << num_dimensiones << endl;
-		cout << "borrosidad: " << borrosidad << "   epsilon:  " << epsilon << endl;
+		int iteracion = 0,subIteracion=0;
 
 		do {
-
-
-
 			calcular_vectores_centroides();
 			max_dif = actualizar_pertenencias();
 			iteracion++;
+			subIteracion++;
 
-
-			cout << "Terminada Iteracion: "<< iteracion <<"  , error: " << max_dif << " es mayor que "<< epsilon <<endl;
-			for (int i = 0; i < num_clusters; i++)
+			if (subIteracion==5 && verIteraciones==true)
 			{
-				cout << "Centroide " << i << ":  ";
-				for (int j = 0; j < num_dimensiones; j++)
-				{
-
-					cout << centroides[i][j] << " | ";
-				}
-				cout << endl;
+				imprimirIteracion(max_dif, iteracion);
+				subIteracion = 0;
 			}
-			cout << endl; cout << endl; cout << "////////////////////////////"; cout << endl;
 
 		} while (max_dif > epsilon && iteracion < iteraciones);
-
+		ejecucion = true;
 		return centroides;
 	}
 
+	//guarda los en la ruta destino
 	bool FuzzyCMeans::guardarCentroides(string ruta)
 	{
+		if (ejecucion==true)
+		{
+			ofstream archivo;
+			archivo.open(ruta+"centroides.txt");
+			archivo << num_clusters <<";"<<num_dimensiones<<"\n";
+			for (int i = 0; i < num_clusters; i++) 
+			{
+				archivo << centroides[i][0];
+				for (int j = 1; j < num_dimensiones; j++)
+				{
+					archivo <<";"<<centroides[i][j];
+				}
+				archivo << "\n";
+			}
+			archivo.close();
+			return true;
+		}
 		return false;
 	}
 
-	/*COMPLETAR*/
-	/*bool FuzzyCMeans::guardarCentroides(string ruta)
+	//Carga los los centroides almacenados en un archivo .csv y establece libera y establece los demas parametros en null 
+	void FuzzyCMeans::cargarCentroides(string ruta)
 	{
-		FILE* f;
-		f = fopen("points.dat", "w");
+		char delimitador = ';';
+		string linea, campo;
+		stringstream ss;
+		ifstream fichero(ruta);
 
-	}*/
+		if (!fichero)
+		{
+			cout << "Archivo no encontrado, ERROR";
+			exit(1); // terminate si no se encuentra el archivo
+		}
 
-	void FuzzyCMeans::cargar_centroides(double** matriz)
-	{
+		// Rescatamos el numero de cluster y el numero de dimensiones
+		getline(fichero, linea);
+		ss = stringstream(linea);
+		getline(ss, campo, delimitador);
+		num_clusters = std::stoi(campo);
+		getline(ss, campo, delimitador);
+		num_dimensiones = std::stoi(campo);
+
+		//eliminamos la matriz de datos anterior
+		free(centroides);
+		free(data_puntos);
+		free(grado_pertenencia);
+		grado_pertenencia = nullptr;
+		centroides= nullptr;
+		data_puntos= nullptr;
+
+		//Saltamos Linea
+		getline(fichero, linea);
+
+		double** matriz;
+		matriz = new double*[num_clusters];
+		for (int i=0;i< num_clusters;i++)
+		{
+			ss = stringstream(linea);
+			matriz[i] = new double[num_dimensiones];
+			for (int j=0;j< num_dimensiones;i++)
+			{
+				//Leemos el numero
+				getline(ss, campo, delimitador);
+				matriz[i][j] = stod(campo);
+			}
+			//Avanzamos a la siguiente linea
+			getline(fichero, linea);
+		}
+		fichero.close();
 		centroides = matriz;
 		actualizar_pertenencias();
 	}
 
+	//setea el conjunto de datos usar para entrenar
+	void FuzzyCMeans::setData(double** datos)
+	{
+		data_puntos=datos;
+		ejecucion = true;
+	}
+
+	//Evalua la pertenencia de un dato a cada Cluster
+	double* FuzzyCMeans::evaluarDato(double* datos)
+	{
+		double t, p, sum;
+		double* petenencias = new double[num_clusters];
+
+		for (int i = 0; i < num_clusters; i++)
+		{
+			sum = 0.0;
+			p = 2 / (borrosidad - 1);
+
+			for (int k = 0; k < num_clusters; k++)
+			{
+				t = get_norm(datos, i) / get_norm(datos, k);
+				t = pow(t, p);
+				sum += t;
+			}
+
+			petenencias[i]= 1.0 / sum;
+
+		}
+		return petenencias;
+	}
+
+	// Calcula la norma del vecto entre el punto i y el centroide j.
+	double FuzzyCMeans::get_norm(double* datos, int j)
+	{
+		int k;//dimension
+		double sum = 0.0;
+		for (k = 0; k < num_dimensiones; k++)
+		{
+			sum += pow(datos[k] - centroides[j][k], 2);
+		}
+		return sqrt(sum);
+	}
+
+	// Calcula la norma del vecto entre el punto i y el centroide j.
+	double FuzzyCMeans::get_norm(int i, int j)
+	{
+		int k;//dimension
+		double sum = 0.0;
+
+		for (k = 0; k < num_dimensiones; k++)
+		{
+			sum += pow(data_puntos[i][k] - centroides[j][k], 2);
+		}
+
+		return sqrt(sum);
+	}
+
+	//retorna los clusters resultantes
 	double** FuzzyCMeans::getCentroides()
 	{
 		return centroides;
 	}
 
+	//Retorna los grados de pertenencia de cada tupla
 	double** FuzzyCMeans::getPertenencia()
 	{
 		return grado_pertenencia;
 	}
 
+	/*
+	* Imprime los datos de la itecion actual
+	*/
+	void FuzzyCMeans::imprimirIteracion(double max_dif, int iteracion)
+	{
+		cout << "Iteracion: " << iteracion << "  , error: " << max_dif << endl;
+		for (int i = 0; i < num_clusters; i++)
+		{
+			cout << "Centroide " << (i + 1) << ":  ";
+			for (int j = 0; j < num_dimensiones; j++)
+			{
+				cout << centroides[i][j] << " | ";
+			}
+			cout << endl;
+		}
+		cout << endl<<endl;
+	}
 
 	/*
 	A partir de la distancia de la dintacia de los puntos a los centroides viejos, se calcula los nuevo centroides.
@@ -156,20 +282,6 @@ El disenio por contranto aun no es documentando en el codigo.
 				centroides[j][k] = numerator / denominator;
 			}
 		}
-	}
-
-	// Calcula la norma del vecto entre el punto i y el centroide j.
-	double FuzzyCMeans::get_norm(int i, int j)
-	{
-		int k;//dimension
-		double sum = 0.0;
-
-		for (k = 0; k < num_dimensiones; k++)
-		{
-			sum += pow(data_puntos[i][k] - centroides[j][k], 2);
-		}
-
-		return sqrt(sum);
 	}
 
 	/*
