@@ -7,54 +7,66 @@
 #include <map>
 #include <iostream>
 #include <algorithm>
-
+#include <ostream>
+#include <fstream>
 
 
 using namespace std;
 
 
-	ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, std::string** datos, float _minimo_support, float _min_confianza)
-	{		
-		
-		nroAtributos = _nroAtributos;
-		nroDatos = _nroDatos;
-		min_confianza = _minimo_support;
-		minimo_support = _min_confianza;
-		set<string> item;
-		set<string> aux_set;
-		set<string> aux_lista;
+ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<string>> datos, float _minimo_support, float _min_confianza)
+{
 
-		for (int i = 0; i < nroDatos; i++) {
-			for (int j = 0; j < nroAtributos; j++) {
-				item.insert(datos[i][j]);
-				if (aux_set.find(datos[i][j]) == aux_set.end()) {
-					items.push_back(item);
-				}
-				aux_lista.insert(datos[i][j]);
-				aux_set.insert(datos[i][j]);
-				item.clear();
+	nroAtributos = _nroAtributos;
+	nroDatos = _nroDatos;
+	min_confianza = _minimo_support;
+	minimo_support = _min_confianza;
+	set<string> item;
+	set<string> aux_set;
+	set<string> aux_lista;
+
+	for (int i = 0; i < datos.size(); i++) {
+		for (int j = 0; j < datos[i].size(); j++) {
+			item.insert(datos[i][j]);
+			if (aux_set.find(datos[i][j]) == aux_set.end()) {
+				items.push_back(item);
 			}
-			lista_transaccion.push_back(aux_lista);
-			aux_lista.clear();
-			aux_set.clear();
+			aux_lista.insert(datos[i][j]);
+			aux_set.insert(datos[i][j]);
+			item.clear();
+		}
+		lista_transaccion.push_back(aux_lista);
+		aux_lista.clear();
+		aux_set.clear();
+	}
+}
+	void ItemFrecuente::guardarReglas(string ruta)
+	{
+
+		obtenerItemFrecuentes();
+		obtenerReglas();
+
+		map<set<string>, set<string>>::iterator it2;
+		ofstream archivo;
+		archivo.open(ruta + "reglas_asociativas.txt");
+		archivo << "Reglas asociativas" << "\n";
+		for (it2 = reglas.begin(); it2 != reglas.end(); it2++) {
+			archivo << "Si  ";
+			for (const auto& e : it2->first) {
+				archivo << e << "   ";
+			}
+			archivo << " entonces  ";
+			for (const auto& d : it2->second) {
+				cout << d << "   ";
+			}
+			archivo << "\n";
 		}
 
-		
-		//for (int m = 0; m < lista_transaccion.size(); m++) {
-
-			//std::cout << lista_transaccion.at(m).size();
-		//for (int m = 0; m < items.size(); m++) {
-		//for (set<string>::iterator it = items.at(m).begin(); it != items.at(m).end(); it++) {
-			//		std::cout <<"ITEM: "<< *it << std::endl;
-		//}
-
-			//}
-	//	}
-
-			//aux_lista.clear();
-	
-
+				
+		archivo.close();
 	}
+
+
 
 	float ItemFrecuente::obtenerSupportSet(set<string> conjunto) {
 

@@ -21,9 +21,11 @@ float funcionTriangular(float valorEvaluado, float a, float b, float c);
 
 bool is_number(const string& s);
 
-int getNumeroDatos(map<string, vector<string>> datos);
+int getNumeroDatos(map<vector<string>, vector<vector<string>>> datos);
 
-int getNumeroDimensiones(map<string, vector<string>> datos, int one_hot_encoding);
+int getNumeroDimensiones(map<vector<string>, vector<vector<string>>> datos, int one_hot_encoding);
+
+vector<vector<string>> getDatosItemFrecuente(map<vector<string>, vector<vector<string>>> datos, int one_hot_encoding);
 
 vector<vector<double>> getDatosFuzzyCMeans(map<vector<string>, vector<vector<string>>> datos, int one_hot_encoding);
 

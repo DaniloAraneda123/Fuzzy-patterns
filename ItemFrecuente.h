@@ -29,6 +29,7 @@ using namespace std;
         int nroAtributos;
         int nroDatos;
         vector<set<string>> items;
+        
 
         
         vector<set<string>> lista_transaccion;
@@ -41,13 +42,14 @@ using namespace std;
         float min_confianza = 0;
 
 
-        ItemFrecuente(int numeroAtributos, int nroDatos, std::string** datos, float minimo_support, float min_confianza);
+        ItemFrecuente(int numeroAtributos, int nroDatos, vector<vector<string>> datos, float minimo_support, float min_confianza);
         float obtenerSupportSet(set<string> conjunto);
         map<set<string>, float> obtenerSupport(vector<set<string>> c_items);
         vector<set<string>> une(map<set<string>, float> l, int k);
         vector<set<string>> allPossibleSubset(set<string> conjunto);
         void obtenerItemFrecuentes();
         void obtenerReglas();
+        void guardarReglas(string ruta);
         int subconjunto(set<string> con1, set<string> con2);
         int printPowerSet(int arr[], int n);
         void showPowerSet(string* set, int longitud_set);

@@ -1,0 +1,6 @@
+IF temprature IS hot AND outlook IS sunny THEN swimming ( 0.853659 )
+IF temprature IS hot AND outlook IS cloudy THEN swimming ( 0.722222 )
+IF temprature IS hot AND outlook IS rain THEN w_lifting ( 0.727273 )
+IF temprature IS mild AND wind IS windy THEN w_lifting ( 0.812500 )
+IF temprature IS mild AND wind IS not_windy THEN volleyball ( 0.783784 )
+IF temprature IS cool THEN w_lifting ( 0.883721 )

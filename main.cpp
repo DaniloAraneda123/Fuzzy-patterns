@@ -196,27 +196,9 @@ int main()
 
 	int fila = 4;
 	int col = 4;
-	std::string** matriz = new std::string * [4];
-	matriz[0] = new std::string[4];
-	matriz[1] = new std::string[4];
-	matriz[2] = new std::string[4];
-	matriz[3] = new std::string[4];
-	matriz[0][0] = "soleado";
-	matriz[0][1] = "bajo";
-	matriz[0][2] = "viejo";
-	matriz[0][3] = "si";
-	matriz[1][0] = "soleado";
-	matriz[1][1] = "bajo";
-	matriz[1][2] = "joven";
-	matriz[1][3] = "si";
-	matriz[2][0] = "soleado";
-	matriz[2][1] = "medio";
-	matriz[2][2] = "alto";
-	matriz[2][3] = "no";
-	matriz[3][0] = "nublado";
-	matriz[3][1] = "bajo";
-	matriz[3][2] = "joven";
-	matriz[3][3] = "no";
+	vector<vector<string>> matriz = { {"soleado", "bajo", "viejo","no"}, {"soleado", "bajo", "viejo", "si"} , {"soleado", "bajo", "viejo", "si"} ,{"soleado", "bajo", "viejo", "si"} };
+
+
 
 	// crear itemfrecuente
 	ItemFrecuente frecuente1(4, 4, matriz, 0.20, 0.2);

@@ -12,7 +12,6 @@ using namespace std;
 
 
 
-int mostrar_pantalla_datos(map<string, vector<string>> datos);
 
 
 

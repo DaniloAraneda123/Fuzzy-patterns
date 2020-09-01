@@ -123,14 +123,85 @@ vector<double> obtenerFuzzificacion(double valor, float min, float max) {
 }
 
 
-//double *
-//
-//
-//int getNumeroDatos(map<vector<string>, vector<vector<string>>> datos) {
-//
-//    return datos.begin()->second.size();
-//
-//}
+
+
+
+int getNumeroDatos(map<vector<string>, vector<vector<string>>> datos) {
+
+    return datos.begin()->second.size();
+
+}
+
+
+vector<vector<string>> getDatosItemFrecuente(map<vector<string>, vector<vector<string>>> datos, int one_hot_encoding) {
+
+    vector <vector<string>> matriz;
+    map<int, vector<float>> funcion = obtenerMaximosyMinimos(datos);
+    map<int, vector<string>> one_hot_n = getOneHotEncodingValores(datos);
+    vector<string> fila;
+    vector<vector<string>> aux;
+    vector<string> valores;
+    vector<double> fuzzificacion;
+    vector<string> etiquetas = { "bajo", "medio", "alto" };
+    aux = datos.begin()->second;
+    if (one_hot_encoding) {
+
+        for (int i = 0; i < aux.size(); i++) {
+            for (int j = 0; j < aux[i].size(); j++) {
+                if (!is_number(aux[i][j])) {
+                    valores = one_hot_n[j];
+                    for (int k = 0; k < valores.size(); k++) {
+                       
+                        fila.push_back(datos.begin()->first.at(j) + ":" + valores[k]);
+                    }
+                }
+                else {
+
+                    fuzzificacion = obtenerFuzzificacion(stod(aux[i][j]), funcion[j].at(0), funcion[j].at(1));
+                    if((fuzzificacion[0] > fuzzificacion[1]) && (fuzzificacion[0] > fuzzificacion[1])){
+
+                        fila.push_back(datos.begin()->first.at(j) + ":" + etiquetas[0]);
+                    }
+                    else if ((fuzzificacion[2] > fuzzificacion[0]) && (fuzzificacion[2] > fuzzificacion[1])) {
+
+                        fila.push_back(datos.begin()->first.at(j) + ":" + etiquetas[2]);
+                    }
+                    else {
+
+                        fila.push_back(datos.begin()->first.at(j) + ":" + etiquetas[1]);
+                    }
+                }
+            }
+            matriz.push_back(fila);
+            fila.clear();
+        }
+    }
+    else {
+        for (int i = 0; i < aux.size(); i++) {
+            for (int j = 0; j < aux[i].size(); j++) {
+
+                fuzzificacion = obtenerFuzzificacion(stod(aux[i][j]), funcion[j].at(0), funcion[j].at(1));
+                if ((fuzzificacion[0] > fuzzificacion[1]) && (fuzzificacion[0] > fuzzificacion[1])) {
+
+                    fila.push_back(datos.begin()->first.at(j) + ":" + etiquetas[0]);
+                }
+                else if ((fuzzificacion[2] > fuzzificacion[0]) && (fuzzificacion[2] > fuzzificacion[1])) {
+
+                    fila.push_back(datos.begin()->first.at(j) + ":" + etiquetas[2]);
+                }
+                else {
+
+                    fila.push_back(datos.begin()->first.at(j) + ":" + etiquetas[1]);
+                }
+            }
+            matriz.push_back(fila);
+            fila.clear();
+        }
+
+    }
+    return matriz;
+}
+
 
 map<int, vector<float>> obtenerMaximosyMinimos(map<vector<string>, vector<vector<string>>> datos) {
 
