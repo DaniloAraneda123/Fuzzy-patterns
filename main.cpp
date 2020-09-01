@@ -1,4 +1,4 @@
-#pragma warning (disable : 4996)
+//#pragma warning (disable : 4996)
 
 #include <stdio.h>
 #include <iostream>
@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <map>
 #include "ItemFrecuente.h"
+#include "Comunicacion.h"
 
 
 
@@ -20,6 +21,15 @@ using namespace std;
 
 int main()
 {
+	map< vector<string>, vector<vector<string>>> datos = leerDatos("iris.dat", ';');
+
+
+
+	crearReporte(" ", datos, false, false, true, 3, 100, 0.05, 3.0, 0.5, 0.5, "Flor", 0.7, 0);
+
+	return 0;
+}
+/*
 	cout << setprecision(3);
 	double** pertenecia, ** patrones;
 	int num_data_points, num_clusters, num_dimensions;
@@ -237,3 +247,5 @@ int main()
 		cout << endl;
 	}
 }
+
+*/

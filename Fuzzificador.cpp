@@ -169,6 +169,8 @@ vector<vector<string>> getDatosItemFrecuente(map<vector<string>, vector<vector<s
                     else {
 
                         fila.push_back(datos.begin()->first.at(j) + ":" + etiquetas[1]);
+
+                        //cout << datos.begin()->first.at(j) + ":" + etiquetas[1] << endl;
                     }
                 }
             }
@@ -223,8 +225,8 @@ map<int, vector<float>> obtenerMaximosyMinimos(map<vector<string>, vector<vector
                 }
 
             }
-            cout << minimo << endl;
-            cout << maximo << endl;
+            //cout << minimo << endl;
+            //cout << maximo << endl;
             conjunto.push_back(minimo);
             conjunto.push_back(maximo);
             resultados.insert({ j, conjunto });
@@ -265,7 +267,7 @@ vector<vector<double>>getDatosFuzzyID3(map<vector<string>, vector<vector<string>
 
                     fuzzificacion = obtenerFuzzificacion(stod(aux[i][j]), funcion[j].at(0), funcion[j].at(1));
                     for (int k = 0; k < fuzzificacion.size(); k++) {
-                        cout << fuzzificacion[k];
+                        //cout << fuzzificacion[k];
                         fila.push_back(fuzzificacion[k]);
                     }
                 }
@@ -390,22 +392,31 @@ vector<vector<double>> getDatosFuzzyCMeans(map<vector<string>, vector<vector<str
     if (one_hot_encoding) {
         for (int i = 0; i < aux.size(); i++) {
             for (int j = 0; j < aux[i].size(); j++) {
-                if (!is_number(aux[i][j])) {
+                if (!is_number(aux[i][j])){
+                    //cout << aux[i][j] + "valor  ";
                     valores = one_hot_n[j];
                     for (int k = 0; k < valores.size(); k++) {
                         if (aux[i][j] == valores[k]) {
                             fila.push_back(1);
+
+                           // cout << fila[j] << "  ";
                         }
                         else {
                             fila.push_back(0);
+
+                            //cout << fila[j] << "  ";
                         }
                     }
                 }
                 else {
                     fila.push_back(stod(aux[i][j]));
+
+                    //cout << fila[j] << "  ";
                 }
             }
             resultados.push_back(fila);
+
+            cout << "\n" << endl;
             fila.clear();
         }
     }

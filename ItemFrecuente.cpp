@@ -44,7 +44,11 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 	{
 
 		obtenerItemFrecuentes();
+
+		cout << "Termino ItemFrecuente" << endl;
 		obtenerReglas();
+
+		cout << "Terimno ObtenerReglas" << endl;
 
 		map<set<string>, set<string>>::iterator it2;
 		ofstream archivo;
@@ -57,6 +61,7 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 			}
 			archivo << " entonces  ";
 			for (const auto& d : it2->second) {
+				cout << it2->second.size();
 				cout << d << "   ";
 			}
 			archivo << "\n";
@@ -170,7 +175,7 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 			}
 			aux_item_frecuentes = obtenerSupport(c_items);
 			
-			//cout << "Tamano aux_item_frecuentes para k:    "<< to_string(k) + " " + to_string(aux_item_frecuentes.size()) << endl;
+			cout << "Tamano aux_item_frecuentes para k:    "<< to_string(k) + " " + to_string(aux_item_frecuentes.size()) << endl;
 
 			if (aux_item_frecuentes.size() == 0) { 
 				fin = 0;
@@ -243,12 +248,13 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 		for (int i = 0; i < item_frecuentes.size(); i++) {
 			for (it = item_frecuentes.at(i).begin(); it != item_frecuentes.at(i).end(); it++)
 			{
-				
+				cout << "ItemFrecuente: " << i << endl;
 				if ((it->first).size() > 1) {
 					total = it->first;
 					//cout << "Total " << i;
 					aux = allPossibleSubset(total);
 					for (int j = 0; j < aux.size(); j++) {
+						cout << "ItemFrecuente: Elemento en la posicion " << j << endl;
 						antecedente = aux.at(j);
 						set_difference(total.begin(), total.end(), antecedente.begin(), antecedente.end(), inserter(consecuente, consecuente.begin()));
 						if (consecuente.size() > 0 & antecedente.size() > 0) {

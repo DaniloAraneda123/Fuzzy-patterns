@@ -175,7 +175,7 @@ El disenio por contranto aun no es documentando en el codigo.
 		for (int i=0;i< num_datos;i++)
 		{
 			d[i] = new double[num_dimensiones];
-			for (int j=0; i<num_dimensiones;j++)
+			for (int j=0; j<num_dimensiones;j++)
 			{
 				d[i][j] = datos[i][j];
 			}

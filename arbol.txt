@@ -1,17 +1,7 @@
-|temprature|
-	<hot>
-		|outlook|
-			<sunny>
-					[swimming](0.853659)
-			<cloudy>
-					[swimming](0.722222)
-			<rain>
-					[w_lifting](0.727273)
-	<mild>
-		|wind|
-			<windy>
-					[w_lifting](0.812500)
-			<not_windy>
-					[volleyball](0.783784)
-	<cool>
-			[w_lifting](0.883721)
+ |petal width|
+ 	<bajo>
+	 		[setosa](0.942755)
+ 	<medio>
+	 		[versicolor](0.632406)
+ 	<alto>
+	 		[virginica](0.888060)

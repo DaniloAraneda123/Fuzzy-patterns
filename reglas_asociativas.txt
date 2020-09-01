@@ -1,0 +1,5 @@
+Reglas asociativas
+Si  Flor:setosa    entonces  
+Si  Flor:versicolor    entonces  
+Si  Flor:virginica    entonces  
+Si  petal length:bajo    entonces  
