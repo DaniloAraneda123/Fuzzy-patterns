@@ -123,15 +123,16 @@ vector<double> obtenerFuzzificacion(double valor, float min, float max) {
 }
 
 
-double *
+//double *
+//
+//
+//int getNumeroDatos(map<vector<string>, vector<vector<string>>> datos) {
+//
+//    return datos.begin()->second.size();
+//
+//}
 
-
-int getNumeroDatos(map<vector<string>, vector<vector<string>>> datos) {
-
-    return datos.begin()->second.size();
-
-}
-map<int, vector<float>>obtenerMaximosyMinimos(map<vector<string>, vector<vector<string>>> datos) {
+map<int, vector<float>> obtenerMaximosyMinimos(map<vector<string>, vector<vector<string>>> datos) {
 
     map<int, vector<float>> resultados;
     vector<vector<string>> aux;

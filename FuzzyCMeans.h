@@ -1,11 +1,11 @@
-﻿#pragma once
+#pragma once
 #include <iostream>
 #include<fstream>
 #include<windows.h>
 #include <sstream>
+#include <vector>
 
 using namespace std;
-
 
 class FuzzyCMeans
 {
@@ -24,9 +24,10 @@ private:
 public:
 	FuzzyCMeans();
 
-	FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy, vector<vector<double>> matriz);
 
 	FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy);
+
+	void setData(vector<vector<double>> datos);
 
 	double** fcm(bool verIteraciones);
 
