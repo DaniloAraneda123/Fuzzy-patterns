@@ -1,4 +1,4 @@
-#pragma once
+_#pragma once
 
 #include <string>
 #include <vector>
@@ -47,6 +47,17 @@ public:
         datos.push_back(valoresFuzzy);
     }
 
+    void setHeader(vector<string> atri, vector<string> terms)
+    {
+        atributos = atri;
+        variablesLinguisticas = terms;
+    }
+
+    //set Datos
+    void setDatos(vector<vector<double>> data)
+    {
+        datos = data;
+    }
 
 
     //Retorna una lista con los nombres de los terminos linguisticos de un atributo.

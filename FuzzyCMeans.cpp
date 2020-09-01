@@ -1,5 +1,6 @@
 ﻿#include <math.h>
 #include "FuzzyCMeans.h"
+#include<vector>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ El disenio por contranto aun no es documentando en el codigo.
 	}
 
 //Construcctor
-	FuzzyCMeans::FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy, double** datos)
+	FuzzyCMeans::FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy, vector<vector<double>> matriz)
 	{
 		num_datos = nDatos;
 		num_clusters = nClusters;
@@ -23,6 +24,17 @@ El disenio por contranto aun no es documentando en el codigo.
 		iteraciones = it;
 		epsilon = error;
 		borrosidad = gradoFuzzy;
+
+		double** datos = new double*[nDatos];
+		for (int i=0;i< nDatos;i++)
+		{
+			datos[i]= new double[nDimensiones];
+			for (int j=0; j< nDimensiones;j++)
+			{
+				datos[i][j] = matriz[i][j];
+			}
+		}
+
 		data_puntos = datos;
 
 
@@ -60,6 +72,49 @@ El disenio por contranto aun no es documentando en el codigo.
 		ejecucion = false;
 	}
 
+	FuzzyCMeans::FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy)
+	{
+		num_datos = nDatos;
+		num_clusters = nClusters;
+		num_dimensiones = nDimensiones;
+		iteraciones = it;
+		epsilon = error;
+		borrosidad = gradoFuzzy;
+
+
+		//Crear Matriz Centroides
+		centroides = new double* [num_clusters];
+		for (int i = 0; i < num_clusters; i++)
+		{
+			centroides[i] = new double[num_dimensiones];
+
+			for (int j = 0; j < num_dimensiones; j++)
+			{
+				centroides[i][j] = 0;
+			}
+		}
+
+		//Crear Matriz grados de pertencia 
+		double s;
+		int r, rval;
+		grado_pertenencia = new double* [num_datos];
+
+		for (int i = 0; i < num_datos; i++)
+		{
+			s = 0.0;
+			r = 100;
+			grado_pertenencia[i] = new double[num_clusters];
+			for (int j = 0; j < num_clusters; j++)
+			{
+				rval = rand() % (r + 1);
+				r -= rval;
+				grado_pertenencia[i][j] = rval / 100.0;
+				s += grado_pertenencia[i][j];
+			}
+			grado_pertenencia[i][0] = 1.0 - s;
+		}
+		ejecucion = false;
+	}
 
 	/*
 	*mientras la el error sea mayor que el permitido o  el numero de iteraciones actual es menor que el limite,
@@ -167,7 +222,7 @@ El disenio por contranto aun no es documentando en el codigo.
 	void FuzzyCMeans::setData(double** datos)
 	{
 		data_puntos=datos;
-		ejecucion = true;
+		ejecucion = false;
 	}
 
 	//Evalua la pertenencia de un dato a cada Cluster

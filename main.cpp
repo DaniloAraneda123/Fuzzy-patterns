@@ -48,7 +48,8 @@ int main()
 			}
 		}
 
-		FuzzyCMeans instancia(num_data_points, num_clusters, num_dimensions, 100, epsilon, borrosidad, data_point);
+		FuzzyCMeans instancia(num_data_points, num_clusters, num_dimensions, 100, epsilon, borrosidad);
+		instancia.setData(data_point);
 
 		patrones = instancia.fcm(true);
 		pertenecia = instancia.getPertenencia();
@@ -81,7 +82,7 @@ int main()
 
 		cin.get();
 
-		cout << "Evaluar Dato" << "  4.3 | 3.0 | 1.1 | 0.1"<<endl;
+		cout << "evaluar dato" << "  4.3 | 3.0 | 1.1 | 0.1"<<endl;
 		double dato[] = { 4.3,3.0,1.1,0.1 };
 		double* pertenencias=instancia.evaluarDato(dato);
 		for (int i=0;i<3;i++)
@@ -96,11 +97,11 @@ int main()
 	}
 
 	Dataset d;
-	d.addAtributo("Outlook"		,vector<string>({ "Sunny", "Cloudy", "Rain"				})	);
-	d.addAtributo("Temprature"	,vector<string>({"Hot", "Mild", "Cool"					})	);
-	d.addAtributo("Humidity"	,vector<string>({ "Humid", "Normal"						})	);
-	d.addAtributo("Wind"		,vector<string>({ "Windy", "Not_Windy"					})	);
-	d.addAtributo("Plan"		,vector<string>({ "Volleyball", "Swimming", "W_lifting"	})	);
+	d.addAtributo("outlook"		,vector<string>({ "sunny", "cloudy", "rain"				})	);
+	d.addAtributo("temprature"	,vector<string>({"hot", "mild", "cool"					})	);
+	d.addAtributo("humidity"	,vector<string>({ "humid", "normal"						})	);
+	d.addAtributo("wind"		,vector<string>({ "windy", "not_windy"					})	);
+	d.addAtributo("plan"		,vector<string>({ "volleyball", "swimming", "w_lifting"	})	);
 
 
 	d.addFila(vector<double>({ 0.9, 0.1, 0.0, 1.0, 0.0, 0.0, 0.8, 0.2, 0.4, 0.6, 0.0, 0.8, 0.2	}));
@@ -122,13 +123,13 @@ int main()
 
 	FuzzyID3 fdt (0.7, 0.5);
 
-	cout << "MEDIR AMIGUEDAD " << endl;
-	cout << "G(Outlook) = "<< fdt.getAmbiguedad(d, "Plan", "Outlook") << endl;
-	cout << "G(Temprature) = "<< fdt.getAmbiguedad(d, "Plan", "Temprature") << endl;
-	cout << "G(Humidity) = "<< fdt.getAmbiguedad(d, "Plan", "Humidity") << endl;
-	cout << "G(Wind) = "<<fdt.getAmbiguedad(d, "Plan", "Wind")<<endl << endl << endl << endl;
+	cout << "medir amiguedad " << endl;
+	cout << "g(outlook) = "<< fdt.getAmbiguedad(d, "plan", "outlook") << endl;
+	cout << "g(temprature) = "<< fdt.getAmbiguedad(d, "plan", "temprature") << endl;
+	cout << "g(humidity) = "<< fdt.getAmbiguedad(d, "plan", "humidity") << endl;
+	cout << "g(wind) = "<<fdt.getAmbiguedad(d, "plan", "wind")<<endl << endl << endl << endl;
 
-	TreeNode root = fdt.construirArbol(d, "Plan");
+	TreeNode root = fdt.construirArbol(d, "plan");
 
 	fdt.printTree(root, "");
 
@@ -143,7 +144,7 @@ int main()
 	cin.get();
 	system("cls");
 
-	cout << "Imprimiendo Reglas" << endl;
+	cout << "imprimiendo reglas" << endl;
 	for (string &rule:rules)
 	{
 		cout << rule << endl;
@@ -152,11 +153,11 @@ int main()
 
 	Dataset d1;
 
-	d1.addAtributo("Outlook", vector<string>({ "Sunny", "Cloudy", "Rain" }));
-	d1.addAtributo("Temprature", vector<string>({ "Hot", "Mild", "Cool" }));
-	d1.addAtributo("Humidity", vector<string>({ "Humid", "Normal" }));
-	d1.addAtributo("Wind", vector<string>({ "Windy", "Not_Windy" }));
-	d1.addAtributo("Plan", vector<string>({ "Volleyball", "Swimming", "W_lifting" }));
+	d1.addAtributo("outlook", vector<string>({ "sunny", "cloudy", "rain" }));
+	d1.addAtributo("temprature", vector<string>({ "hot", "mild", "cool" }));
+	d1.addAtributo("humidity", vector<string>({ "humid", "normal" }));
+	d1.addAtributo("wind", vector<string>({ "windy", "not_windy" }));
+	d1.addAtributo("plan", vector<string>({ "volleyball", "swimming", "w_lifting" }));
 
 
 	d1.addFila(vector<double>({ 0.9, 0.1, 0.0, 1.0, 0.0, 0.0, 0.8, 0.2, 1, 1, 0.0, 0.8, 0.2 }));
@@ -180,7 +181,7 @@ int main()
 
 	for (int i=0;i<16;i++)
 	{
-		clas = fdt.clasificar(i, d1, "Plan", rules);
+		clas = fdt.clasificar(i, d1, "plan", rules);
 		for (int j = 0; j < clas.size(); j++)
 		{
 			cout << clas[j] << " - ";
@@ -200,15 +201,15 @@ int main()
 	matriz[1] = new std::string[4];
 	matriz[2] = new std::string[4];
 	matriz[3] = new std::string[4];
-	matriz[0][0] = "Soleado";
+	matriz[0][0] = "soleado";
 	matriz[0][1] = "bajo";
 	matriz[0][2] = "viejo";
 	matriz[0][3] = "si";
-	matriz[1][0] = "Soleado";
+	matriz[1][0] = "soleado";
 	matriz[1][1] = "bajo";
 	matriz[1][2] = "joven";
 	matriz[1][3] = "si";
-	matriz[2][0] = "Soleado";
+	matriz[2][0] = "soleado";
 	matriz[2][1] = "medio";
 	matriz[2][2] = "alto";
 	matriz[2][3] = "no";
@@ -217,11 +218,11 @@ int main()
 	matriz[3][2] = "joven";
 	matriz[3][3] = "no";
 
-	// Crear ItemFrecuente
+	// crear itemfrecuente
 	ItemFrecuente frecuente1(4, 4, matriz, 0.20, 0.2);
 
 
-	//frecuente1.obtenerSupport(frecuente1.items);
+	//frecuente1.obtenersupport(frecuente1.items);
 	frecuente1.obtenerItemFrecuentes();
 
 	map<set<string>, float>::iterator it;
@@ -237,7 +238,7 @@ int main()
 			cout << endl;
 		}
 	}
-	cout << endl<<endl<<"REGLAS de Item Frecuente"<<endl<<endl;
+	cout << endl<<endl<<"reglas de item frecuente"<<endl<<endl;
 
 	frecuente1.obtenerReglas();
 

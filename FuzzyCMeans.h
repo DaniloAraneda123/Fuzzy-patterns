@@ -24,7 +24,9 @@ private:
 public:
 	FuzzyCMeans();
 
-	FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy, double** datos);
+	FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy, vector<vector<double>> matriz);
+
+	FuzzyCMeans(int nDatos, int nClusters, int nDimensiones, int it, double error, double gradoFuzzy);
 
 	double** fcm(bool verIteraciones);
 

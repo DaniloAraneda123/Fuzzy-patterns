@@ -7,43 +7,74 @@
 #include <map>
 #include <set>
 #include <string>
-#include <utility> // std::pair
-#include <stdexcept> // std::runtime_error
-#include <sstream> // std::stringstream
+#include <utility> 
+#include <stdexcept> 
+#include <sstream> 
+#include "FuzzyCMeans.h"
 #include "FuzzyID3.h"
+#include "Dataset.h"
 
 using namespace std;
 
 
+Dataset llenarDataSet(vector <string> header, vector<vector<double>> datos)
+{
+    Dataset baseDatos;
+    string atributo;
+    vector<string> atributos, terminosLinguisticos;
+    int pos;
+    baseDatos.setDatos(datos);
+    for (int i = 0; i < header.size(); i++)
+    {
+        pos = header[i].find("_");
+        atributos.push_back(header[i].substr(0, pos));
+        terminosLinguisticos.push_back(header[i].substr(pos + 1));
+    }
+    baseDatos.setHeader(atributos, terminosLinguisticos);
+    return baseDatos;
+}
 
-void crearReporte(string ruta, map<vector<string>, vector<vector<string>>> datos, bool fuzzycmeans, bool id3Difuso, bool itemFrecuente) {
 
+void crearReporte(string ruta, map<vector<string>,vector<vector<string>>> datos, bool fuzzycmeans, bool id3Difuso,
+                    bool itemFrecuente,int numero_clusters,int iteracion_fuzzycmeans, double error_fuzzy, double gradoFuzzy,
+                    double nivelVerdad,double nivelSignificacia,string variableClass)
+{
 
-    if (fuzzycmeans) {
+    if (fuzzycmeans) 
+    {
         int one_hot_encoding = 1;
+        vector<string> header = getHeaderFuzzyCMeans(datos, one_hot_encoding);
         vector<vector<double>> matriz = getDatosFuzzyCMeans(datos, one_hot_encoding);
         int nroDatos = getNumeroDatos(datos);
         int nroDimensiones = getNumeroDimensiones(datos, one_hot_encoding);
-
-    }
+        FuzzyCMeans fuzzyCMeans = FuzzyCMeans(nroDatos, numero_clusters, nroDimensiones, iteracion_fuzzycmeans, error_fuzzy, gradoFuzzy, matriz);
+        fuzzyCMeans.guardarCentroides(ruta);
 
     if (id3Difuso) 
     {
+        //Retorna variables Linguisticas
+        vector<string> header= getHeaderFuzzyID3(datos,1);
+
+        //Retorna matriz de datos
+        vector<vector<double>>dataID3 = getDatosFuzzyID3(datos,1);
+
+        Dataset baseDatos=llenarDataSet(header, dataID3);
         FuzzyID3 fdt (nivelVerdad, nivelSignificacia);
-        TreeNode root = fdt.construirArbol(d, variableClass);
-        fdt.guardaArbol(root,"","arbol.txt","");
-        vector<string> rules = fdt.generarReglas(root);
+        TreeNode root = fdt.construirArbol(baseDatos, variableClass);
+        fdt.guardaArbol(root,ruta,"arbol.txt","");
+        vector<string> reglasID3 = fdt.generarReglas(root);
     }
 
-    if (itemFrecuente) {
-
+    if (itemFrecuente) 
+    {
 
     }
-
-
 
 }
-int mostrar_pantalla_datos(map<string, vector<string>> datos) {
+
+
+int mostrar_pantalla_datos(map<string, vector<string>> datos) 
+{
 
 
     return 1;

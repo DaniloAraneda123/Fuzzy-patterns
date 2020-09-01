@@ -123,6 +123,7 @@ vector<double> obtenerFuzzificacion(double valor, float min, float max) {
 }
 
 
+double *
 
 
 int getNumeroDatos(map<vector<string>, vector<vector<string>>> datos) {
@@ -212,7 +213,7 @@ vector<vector<double>>getDatosFuzzyID3(map<vector<string>, vector<vector<string>
                 }
             }
             resultados.push_back(fila);
-            fila.clear();
+            fila.clear();  
         }
 
     }
@@ -238,7 +239,7 @@ vector<string>getHeaderFuzzyID3(map<vector<string>, vector<vector<string>>> dato
             if (!is_number(aux[0][j])) {
                 valores = one_hot_n[j];
                 for (int k = 0; k < valores.size(); k++) {
-                    header.push_back(datos.begin()->first.at(j) + " " + valores[k]);
+                    header.push_back(datos.begin()->first.at(j) + "_" + valores[k]);
 
                 }
             }
@@ -247,7 +248,7 @@ vector<string>getHeaderFuzzyID3(map<vector<string>, vector<vector<string>>> dato
                 //fuzzificacion = obtenerFuzzificacion(stod(aux[i][j]), funcion[j].at(0), funcion[j].at(1));
                 for (int k = 0; k < etiquetas.size(); k++) {
 
-                    header.push_back(datos.begin()->first.at(j) + " " + etiquetas[k]);
+                    header.push_back(datos.begin()->first.at(j) + "_" + etiquetas[k]);
                 }
             }
         }
@@ -258,7 +259,7 @@ vector<string>getHeaderFuzzyID3(map<vector<string>, vector<vector<string>>> dato
             //fuzzificacion = obtenerFuzzificacion(stod(aux[i][j]), funcion[j][0], funcion[j][1]);
             for (int k = 0; k < etiquetas.size(); k++) {
 
-                header.push_back(datos.begin()->first.at(j) + " " + etiquetas[k]);
+                header.push_back(datos.begin()->first.at(j) + "_" + etiquetas[k]);
             }
         }
 
@@ -274,8 +275,8 @@ int getNumeroDimensiones(map<vector<string>, vector<vector<string>>> datos, int 
     return getHeaderFuzzyCMeans(datos, one_hot_encoding).size();
 
 }
-vector<string> getHeaderFuzzyCMeans(map<vector<string>, vector<vector<string>>> datos, int one_hot_encoding) {
-
+vector<string> getHeaderFuzzyCMeans(map<vector<string>, vector<vector<string>>> datos, int one_hot_encoding) 
+{
     vector<string> header;
     if (one_hot_encoding) {
         map<int, vector<string>> one_hot_n = getOneHotEncodingValores(datos);
