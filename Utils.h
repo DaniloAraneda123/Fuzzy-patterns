@@ -60,7 +60,7 @@ public:
         double s = sum(a);
         if (s == 0) 
         {
-            return -1;
+            return std::numeric_limits<double>::infinity();
         }
         return sumOfMinimum(a, b) / sum(a);
     }
@@ -96,17 +96,11 @@ public:
         for (int i = 0; i < n; i++) 
         {
             s += (ap[i] - ap[i + 1]) * log((i+1));
-        }
 
+        }
         return s;
     }
 
-    static double ambiguityOfAttribute() 
-    {
-        return 0;
-    }
-
-    
     static double ambiguity(vector<double> a, double alpha) 
     {
         int n = a.size();

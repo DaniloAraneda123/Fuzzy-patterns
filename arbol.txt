@@ -1,7 +1,0 @@
- |petal width|
- 	<bajo>
-	 		[setosa](0.942755)
- 	<medio>
-	 		[versicolor](0.632406)
- 	<alto>
-	 		[virginica](0.888060)

@@ -149,11 +149,9 @@ vector<vector<string>> getDatosItemFrecuente(map<vector<string>, vector<vector<s
         for (int i = 0; i < aux.size(); i++) {
             for (int j = 0; j < aux[i].size(); j++) {
                 if (!is_number(aux[i][j])) {
-                    valores = one_hot_n[j];
-                    for (int k = 0; k < valores.size(); k++) {
-                       
-                        fila.push_back(datos.begin()->first.at(j) + ":" + valores[k]);
-                    }
+
+                    fila.push_back(datos.begin()->first.at(j) + ":" + aux[i][j]);
+                   
                 }
                 else {
 
@@ -174,6 +172,10 @@ vector<vector<string>> getDatosItemFrecuente(map<vector<string>, vector<vector<s
                     }
                 }
             }
+            for (int m = 0; m < fila.size(); m++) {
+                //cout << fila[m] << "   ";
+            }
+            //cout << "------" << endl;
             matriz.push_back(fila);
             fila.clear();
         }

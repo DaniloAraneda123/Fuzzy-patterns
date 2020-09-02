@@ -1,5 +1,0 @@
-region tiempo temperatura
-coquimbo templado 0.2
-santiago templado 0.4
-antofagasta caluroso 0.2
-santiago frio 0.3

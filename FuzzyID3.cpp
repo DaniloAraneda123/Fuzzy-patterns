@@ -40,7 +40,7 @@ using namespace std;
 
         if (padre.size() == 0)
         {
-            double AmbiguedadMinima = 10000;
+            double AmbiguedadMinima = 1000000;
             string bestAtributo="";
 
             //Buscamos el atributo con la menor Ambiguedad
@@ -80,7 +80,6 @@ using namespace std;
                         c2.setValue(dot);
                         c.addChild(&c2);
                         root.addChild(&c);
-
                         canBelongeToClass = true;
                         break;
                     }
@@ -88,6 +87,7 @@ using namespace std;
                 //puede pertenecer al sub arbol
                 if (!canBelongeToClass) 
                 {
+                    
                     //Removemos el best Atributo ,  que fue ocupado ya
                     vector <string> newAtributos(atributos.size() - 1);
                     for (int j = 0, k = 0; j < atributos.size(); j++)
@@ -109,6 +109,7 @@ using namespace std;
                     //Se uno como hijo el nuevo sub arbol generado
                     node.addChild(&c);
                     root.addChild(&node);
+
                 }
             }
 
@@ -120,27 +121,28 @@ using namespace std;
             if (atributos.size() > 1)
             {
                 vector<string> args1(padre.size() + 1);
-                for (int i = 0; i < padre.size(); i++)
-                    args1.push_back(padre[i]);
                 args1.push_back(nombreClase);
 
-                double ambg = getAmbiguedad(dataset, nombreClase, padre);;
-
+                double ambg = getAmbiguedad(dataset, nombreClase, padre);
                 for (string& atr : atributos)
                 {
-                    vector<string>  args2(padre.size() + 1);
-                    args2.assign(args1.begin(), args1.end());
+                    vector<string>  args2(args1.size() + 1);
+                    for (int i = 0; i < args1.size(); i++)
+                        args2[i+1]=args1[i];
                     args2[0] = atr;
+
+
                     double ambg2 = getAmbiguedad(dataset, nombreClase, atr, padre);
+
 
                     if (ambg2 <= ambg)
                     {
+                        //cout << "cambio" << endl;
                         bestAtributo = atr;
                         ambg = ambg2;
                     }
 
                 }
-
                 if ("" == bestAtributo)
                 {
                     vector<string> args1;
@@ -162,6 +164,7 @@ using namespace std;
                             bestClass = classTerm;
                         }
                     }
+
                     c2= TreeNode("HOJA", bestClass);
                     c2.setValue(bestDOT);
                     return c2;
@@ -199,10 +202,9 @@ using namespace std;
                                 break;
                             }
                         }
-
                         if (!canBelongeToClass)
                         {
-                            //Remove the best attribute
+                            //Remueve el mejor atributo
                             vector <string> newAttrs(atributos.size() - 1);
                             for (int j = 0, k = 0; j < atributos.size(); j++)
                             {
@@ -219,6 +221,7 @@ using namespace std;
                                 newArgs[i+2]=padre[i];
 
                             node=  TreeNode("VALOR", term);
+
 
                             c = growTree(dataset, newArgs, newAttrs, nombreClase);
 
@@ -360,6 +363,7 @@ using namespace std;
                 {
                     vector<double> c = dataset.getValoresCol(nombreClase,classTerms[j]);
                     normalizedPossibility[j] = Utils::subSetHood(b[i], c);
+
                     if (normalizedPossibility[j] > max) 
                     {
                         max = normalizedPossibility[j];

@@ -45,26 +45,47 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 
 		obtenerItemFrecuentes();
 
-		cout << "Termino ItemFrecuente" << endl;
+		cout << "Termina la busqueda de ItemFrecuentes" << endl;
+
 		obtenerReglas();
 
-		cout << "Terimno ObtenerReglas" << endl;
+		cout << "Termina la generacion de reglas" << endl;
 
 		map<set<string>, set<string>>::iterator it2;
 		ofstream archivo;
 		archivo.open(ruta + "reglas_asociativas.txt");
 		archivo << "Reglas asociativas" << "\n";
+		cout << reglas.size();
+		int cont = 0;
+		int por_reglas = 0;
 		for (it2 = reglas.begin(); it2 != reglas.end(); it2++) {
 			archivo << "Si  ";
-			for (const auto& e : it2->first) {
-				archivo << e << "   ";
+			cont = 0;
+			for (const auto& e : it2->first){
+				cont += 1;
+				if (cont == it2->first.size()) {
+					archivo << e;
+				}
+				else {
+					archivo << e << " y ";
+				}
+				
 			}
-			archivo << " entonces  ";
+			cont = 0;
+			archivo << "  Entonces  ";
 			for (const auto& d : it2->second) {
-				cout << it2->second.size();
-				cout << d << "   ";
+				cont += 1;
+				if (cont == it2->second.size()) {
+					archivo << d  ;
+					//archivo << reglas_confianza.at(por_reglas);
+				}
+				else {
+					archivo << d << " y ";
+				}
+				
 			}
 			archivo << "\n";
+			por_reglas += 1;
 		}
 
 				
@@ -79,17 +100,12 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 		float support = 0;
 		for (int j = 0; j < lista_transaccion.size(); j++) {
 			if (includes(lista_transaccion.at(j).begin(), lista_transaccion.at(j).end(), conjunto.begin(), conjunto.end())) {
-
 				support += 1. / total_transacciones;
-				//cout << support;
 			}
-
 		}
 		return support;
-
-
-
 	}
+
 	map<set<string>, float> ItemFrecuente::obtenerSupport(vector<set<string>> c_items)
 	{
 		float total_transacciones = float(lista_transaccion.size());
@@ -98,63 +114,16 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 		for (int i = 0; i < c_items.size(); i++) {
 			for (int j = 0; j < lista_transaccion.size(); j++) {
 				if (includes(lista_transaccion.at(j).begin(), lista_transaccion.at(j).end(), c_items.at(i).begin(), c_items.at(i).end())){
-
 					support += 1. / total_transacciones;
-					//cout << support;
 				}
-
 			}	
 			if (support > minimo_support) {
-
 				item_frecuente.insert({ c_items.at(i), support });
 			}
 			support = 0;	
 		}
 		return item_frecuente;
-		/*
-		for (int i = 0; i < c_items.size(); i++) {
-			for (set<string>::iterator it = c_items.at(i).begin(); it != c_items.at(i).end(); it++) {
-				for (int j = 0; j < lista_transaccion.size(); j++) {
-					for (int r = 0; r < lista_transaccion.at(j).size(); r++) {
-
-						if (lista_transaccion.at(j).at(r).find(*it) != lista_transaccion.at(j).at(r).end()) {
-							support += 1. / total_transacciones;
-						}
-					}
-				}
-				cout << "ITEM   " << *it << "    Support  " << support << std::endl;
-				showPowerSet(*it, c_items.at(i).size());
-				item_frecuente.insert({ c_items.at(i), support });
-				//}
-				support = 0;
-			}
-			//if (support > minimo_support) {
-	
-		}
-
 		
-		
-		map<set<string>, float>::iterator it;
-		for (it = item_frecuente.begin(); it != item_frecuente.end(); it++)
-		{
-			cout << (*it->first.begin())  << ':' << it->second << std::endl;
-		}
-		*/
-		//return item_frecuente;
-
-		
-		//map<vector<vector<string>>, float> aux_item_frecuentes;
-		//for (int i = 0; i < items.size(); i++) {
-			//for (int j = 0; j < lista_transaccion.size(); j++) {
-				//if (find(lista_transaccion.begin(), lista_transaccion.end(), items[i]) != lista_transaccion.end()) {
-					//support = support + 1 / (total_transacciones);
-			//	}
-				//aux_item_frecuentes[items] = support;
-			//}
-			
-		//}
-		
-		//return aux_item_frecuentes;
 	}
 
 	void ItemFrecuente::obtenerItemFrecuentes()
@@ -175,7 +144,7 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 			}
 			aux_item_frecuentes = obtenerSupport(c_items);
 			
-			cout << "Tamano aux_item_frecuentes para k:    "<< to_string(k) + " " + to_string(aux_item_frecuentes.size()) << endl;
+			cout << "Calculando conjunto_item_frecuentes de tamano :    "<< to_string(k) + "    Total de conjuntos: " + to_string(aux_item_frecuentes.size()) << endl;
 
 			if (aux_item_frecuentes.size() == 0) { 
 				fin = 0;
@@ -189,7 +158,7 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 	}
 
 	
-	vector<set<string>> ItemFrecuente::allPossibleSubset(set<string> conjunto)
+	vector<set<string>> ItemFrecuente::subconjuntos(set<string> conjunto)
 	{
 		int n = conjunto.size();
 		int cont = 0;
@@ -197,19 +166,10 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 		vector<set<string>> subconjuntos;
 		set<string>::iterator it;
 		int count = pow(2, n);
-		// The outer for loop will run 2^n times to print all subset .
-		// Here variable i will act as a binary counter
 		for (int i = 0; i < count; i++) {
-			// The inner for loop will run n times , 
-			// As the maximum number of elements a set can have is n
-			// This loop will generate a 
+
 			for (it = conjunto.begin(); it != conjunto.end(); it++) {
 
-				// This if condition will check if jth bit in 
-				// binary representation of  i  is set or not
-				// if the value of (i & (1 << j)) is not 0 , 
-				// include arr[j] in the current subset
-				// otherwise exclude arr[j]
 				if ((i & (1 << cont)) != 0) {
 					aux.insert(*it);
 				}
@@ -218,24 +178,14 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 			cont = 0;
 			subconjuntos.push_back(aux);
 			aux.clear();
-			//cout << "\n";
 		}
-		/*
-		for (int i = 0; i < subconjuntos.size(); i++) {
-			for (const auto& e : subconjuntos.at(i)) {
-				cout << e << "  ";
-			}
-			cout <<"\n" << endl;
-		}
-		*/
+
 		return subconjuntos;
 	}
 	
 	void ItemFrecuente::obtenerReglas()
 	{
-		//def get_rules(f_itemset, min_confidence, min_lift):
-		
-		//vector<map<set<string>, float>> item_frecuentes;
+
 		map<set<string>, float>::iterator it;
 		set<string>::iterator it2;
 		set<string> antecedente;
@@ -246,18 +196,16 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 		float confianza;
 
 		for (int i = 0; i < item_frecuentes.size(); i++) {
+			cout << "ItemFrecuente: " << i << item_frecuentes.size()  << "Completado" << endl;
 			for (it = item_frecuentes.at(i).begin(); it != item_frecuentes.at(i).end(); it++)
 			{
-				cout << "ItemFrecuente: " << i << endl;
 				if ((it->first).size() > 1) {
 					total = it->first;
-					//cout << "Total " << i;
-					aux = allPossibleSubset(total);
+					aux = subconjuntos(total);
 					for (int j = 0; j < aux.size(); j++) {
-						cout << "ItemFrecuente: Elemento en la posicion " << j << endl;
 						antecedente = aux.at(j);
 						set_difference(total.begin(), total.end(), antecedente.begin(), antecedente.end(), inserter(consecuente, consecuente.begin()));
-						if (consecuente.size() > 0 & antecedente.size() > 0) {
+						if ((consecuente.size() > 0) && (antecedente.size() > 0)) {
 							set_union(begin(antecedente), end(antecedente), begin(consecuente), end(consecuente), inserter(xy, begin(xy)));
 							if (obtenerSupportSet(antecedente) == 0) {
 								confianza = 0;
@@ -265,39 +213,25 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 							else {
 								confianza = obtenerSupportSet(xy) / obtenerSupportSet(antecedente);
 							}
-							
-							//cout << "xy: "<<obtenerSupportSet(xy) <<endl;
-							//cout << "antecdente: "<<obtenerSupportSet(antecedente) <<endl;
-							//cout << confianza<< endl;
+	
 							if (confianza >= min_confianza ) {
-								//cout <<min_confianza << "CONFIANZA: "<<confianza;
+
+								
 								reglas.insert({ antecedente, consecuente });
-								reglas_confianza.insert({ reglas, confianza });
+								reglas_confianza.push_back(confianza);
 							}
 							antecedente.clear();
 							consecuente.clear();
 						}
 					}
 				}
-					//reglas[antecedente] = consecuente;
+
 			}
 			
 		}
 	
 	}
 
-
-	void showPowerSet(string* set, int longitud_set) {
-		unsigned int size = pow(2, longitud_set);
-		for (int contador = 0; contador < size; contador++) {
-			cout << "{";
-			for (int j = 0; j < size; j++) {
-				if (contador & (1 << j)) // revisar <<
-					cout << set[j] << " ";
-			}
-			cout << "}" << endl;
-		}
-	}
 	vector<set<string>> ItemFrecuente::une(map<set<string>, float> aux_item_frecuentes, int k) {
 
 		set<string> aux_items;
@@ -325,40 +259,6 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 		}
 		return 0;
 	}
-	int printPowerSet(int arr[], int n)
-	{
-		vector<string> list;
 
-		/* Run counter i from 000..0 to 111..1*/
-		for (int i = 0; i < (int)pow(2, n); i++)
-		{
-			string subset = "";
-
-			// consider each element in the set 
-			for (int j = 0; j < n; j++)
-			{
-				// Check if jth bit in the i is set. If the bit 
-				// is set, we consider jth element from set 
-				if ((i & (1 << j)) != 0)
-					subset += to_string(arr[j]) + "|";
-			}
-
-			// if subset is encountered for the first time 
-			// If we use set<string>, we can directly insert 
-			if (find(list.begin(), list.end(), subset) == list.end())
-				list.push_back(subset);
-		}
-
-		// consider every subset 
-		for (string subset : list)
-		{
-			// split the subset and print its elements 
-			//vector<string> arr = string.split(subset, '|');
-			//for (string str : arr)
-				//cout << str << " ";
-			cout << endl;
-		}
-		return 1;
-	}
 
       
