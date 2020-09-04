@@ -1,26 +1,26 @@
 //#pragma warning (disable : 4996)
 
-#include <stdio.h>
-#include <iostream>
-#include "FuzzyCMeans.h"
-#include "Dataset.h"
-#include "FuzzyID3.h"
-#include <set>
-#include "TreeNodo.h"
-#include <stdlib.h>
-#include"Utils.h"
-#include <iomanip>
-#include <map>
-#include "ItemFrecuente.h"
-#include "Comunicacion.h"
-
-
-
-using namespace std;
-
-
-int main()
-{
+//#include <stdio.h>
+//#include <iostream>
+//#include "FuzzyCMeans.h"
+//#include "Dataset.h"
+//#include "FuzzyID3.h"
+//#include <set>
+//#include "TreeNodo.h"
+//#include <stdlib.h>
+//#include"Utils.h"
+//#include <iomanip>
+//#include <map>
+//#include "ItemFrecuente.h"
+//#include "Comunicacion.h"
+//
+//
+//
+//using namespace std;
+//
+//
+//int main()
+//{
 //
 //	cout << setprecision(3);
 //	double** pertenecia, ** patrones;
@@ -98,61 +98,61 @@ int main()
 //
 //	}
 
-	Dataset d;
-	d.addAtributo("outlook"		,vector<string>({ "sunny", "cloudy", "rain"				})	);
-	d.addAtributo("temprature"	,vector<string>({"hot", "mild", "cool"					})	);
-	d.addAtributo("humidity"	,vector<string>({ "humid", "normal"						})	);
-	d.addAtributo("wind"		,vector<string>({ "windy", "not_windy"					})	);
-	d.addAtributo("plan"		,vector<string>({ "volleyball", "swimming", "w_lifting"	})	);
+	//Dataset d;
+	//d.addAtributo("outlook"		,vector<string>({ "sunny", "cloudy", "rain"				})	);
+	//d.addAtributo("temprature"	,vector<string>({"hot", "mild", "cool"					})	);
+	//d.addAtributo("humidity"	,vector<string>({ "humid", "normal"						})	);
+	//d.addAtributo("wind"		,vector<string>({ "windy", "not_windy"					})	);
+	//d.addAtributo("plan"		,vector<string>({ "volleyball", "swimming", "w_lifting"	})	);
 
 
-	d.addFila(vector<double>({ 0.9, 0.1, 0.0, 1.0, 0.0, 0.0, 0.8, 0.2, 0.4, 0.6, 0.0, 0.8, 0.2	}));
-	d.addFila(vector<double>({ 0.8, 0.2, 0.0, 0.6, 0.4, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.7, 0.0	}));
-	d.addFila(vector<double>({ 0.0, 0.7, 0.3, 0.8, 0.2, 0.0, 0.1, 0.9, 0.2, 0.8, 0.3, 0.6, 0.1	}));
-	d.addFila(vector<double>({ 0.2, 0.7, 0.1, 0.3, 0.7, 0.0, 0.2, 0.8, 0.3, 0.7, 0.9, 0.1, 0.0	}));
-	d.addFila(vector<double>({ 0.0, 0.1, 0.9, 0.7, 0.3, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, 0.0, 1.0	}));
-	d.addFila(vector<double>({ 0.0, 0.7, 0.3, 0.0, 0.3, 0.7, 0.7, 0.3, 0.4, 0.6, 0.2, 0.0, 0.8	}));
-	d.addFila(vector<double>({ 0.0, 0.3, 0.7, 0.0, 0.0, 1.0, 0.0, 1.0, 0.1, 0.9, 0.0, 0.0, 1.0	}));
-	d.addFila(vector<double>({ 0.0, 1.0, 0.0, 0.0, 0.2, 0.8, 0.2, 0.8, 0.0, 1.0, 0.7, 0.0, 0.3	}));
-	d.addFila(vector<double>({ 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.6, 0.4, 0.7, 0.3, 0.2, 0.8, 0.0  }));
-	d.addFila(vector<double>({ 0.9, 0.1, 0.0, 0.0, 0.3, 0.7, 0.0, 1.0, 0.9, 0.1, 0.0, 0.3, 0.7	}));
-	d.addFila(vector<double>({ 0.7, 0.3, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.2, 0.8, 0.4, 0.7, 0.0	}));
-	d.addFila(vector<double>({ 0.2, 0.6, 0.2, 0.0, 1.0, 0.0, 0.3, 0.7, 0.3, 0.7, 0.7, 0.2, 0.1	}));
-	d.addFila(vector<double>({ 0.9, 0.1, 0.0, 0.2, 0.8, 0.0, 0.1, 0.9, 1.0, 0.0, 0.0, 0.0, 1.0	}));
-	d.addFila(vector<double>({ 0.0, 0.9, 0.1, 0.0, 0.9, 0.1, 0.1, 0.9, 0.7, 0.3, 0.0, 0.0, 1.0	}));
-	d.addFila(vector<double>({ 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.8, 0.2, 0.0, 0.0, 1.0	}));
-	d.addFila(vector<double>({ 1.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 1.0, 0.0, 1.0, 0.8, 0.6, 0.0	}));
+	//d.addFila(vector<double>({ 0.9, 0.1, 0.0, 1.0, 0.0, 0.0, 0.8, 0.2, 0.4, 0.6, 0.0, 0.8, 0.2	}));
+	//d.addFila(vector<double>({ 0.8, 0.2, 0.0, 0.6, 0.4, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.7, 0.0	}));
+	//d.addFila(vector<double>({ 0.0, 0.7, 0.3, 0.8, 0.2, 0.0, 0.1, 0.9, 0.2, 0.8, 0.3, 0.6, 0.1	}));
+	//d.addFila(vector<double>({ 0.2, 0.7, 0.1, 0.3, 0.7, 0.0, 0.2, 0.8, 0.3, 0.7, 0.9, 0.1, 0.0	}));
+	//d.addFila(vector<double>({ 0.0, 0.1, 0.9, 0.7, 0.3, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, 0.0, 1.0	}));
+	//d.addFila(vector<double>({ 0.0, 0.7, 0.3, 0.0, 0.3, 0.7, 0.7, 0.3, 0.4, 0.6, 0.2, 0.0, 0.8	}));
+	//d.addFila(vector<double>({ 0.0, 0.3, 0.7, 0.0, 0.0, 1.0, 0.0, 1.0, 0.1, 0.9, 0.0, 0.0, 1.0	}));
+	//d.addFila(vector<double>({ 0.0, 1.0, 0.0, 0.0, 0.2, 0.8, 0.2, 0.8, 0.0, 1.0, 0.7, 0.0, 0.3	}));
+	//d.addFila(vector<double>({ 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.6, 0.4, 0.7, 0.3, 0.2, 0.8, 0.0  }));
+	//d.addFila(vector<double>({ 0.9, 0.1, 0.0, 0.0, 0.3, 0.7, 0.0, 1.0, 0.9, 0.1, 0.0, 0.3, 0.7	}));
+	//d.addFila(vector<double>({ 0.7, 0.3, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.2, 0.8, 0.4, 0.7, 0.0	}));
+	//d.addFila(vector<double>({ 0.2, 0.6, 0.2, 0.0, 1.0, 0.0, 0.3, 0.7, 0.3, 0.7, 0.7, 0.2, 0.1	}));
+	//d.addFila(vector<double>({ 0.9, 0.1, 0.0, 0.2, 0.8, 0.0, 0.1, 0.9, 1.0, 0.0, 0.0, 0.0, 1.0	}));
+	//d.addFila(vector<double>({ 0.0, 0.9, 0.1, 0.0, 0.9, 0.1, 0.1, 0.9, 0.7, 0.3, 0.0, 0.0, 1.0	}));
+	//d.addFila(vector<double>({ 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.8, 0.2, 0.0, 0.0, 1.0	}));
+	//d.addFila(vector<double>({ 1.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 1.0, 0.0, 1.0, 0.8, 0.6, 0.0	}));
 
-	FuzzyID3 fdt (0.9,0.5);
+	//FuzzyID3 fdt (0.9,0.5);
 
-	double s = fdt.getAmbiguedad(d, "plan", "outlook", vector<string>({ "temprature","hot" }));
-	
-	cout << s << endl;
-	
-	cout << "medir amiguedad " << endl;
-	cout << "g(outlook) = "<< fdt.getAmbiguedad(d, "plan", "outlook") << endl;
-	cout << "g(temprature) = "<< fdt.getAmbiguedad(d, "plan", "temprature") << endl;
-	cout << "g(humidity) = "<< fdt.getAmbiguedad(d, "plan", "humidity") << endl;
-	cout << "g(wind) = "<<fdt.getAmbiguedad(d, "plan", "wind")<<endl << endl << endl << endl;
+	//double s = fdt.getAmbiguedad(d, "plan", "outlook", vector<string>({ "temprature","hot" }));
+	//
+	//cout << s << endl;
+	//
+	//cout << "medir amiguedad " << endl;
+	//cout << "g(outlook) = "<< fdt.getAmbiguedad(d, "plan", "outlook") << endl;
+	//cout << "g(temprature) = "<< fdt.getAmbiguedad(d, "plan", "temprature") << endl;
+	//cout << "g(humidity) = "<< fdt.getAmbiguedad(d, "plan", "humidity") << endl;
+	//cout << "g(wind) = "<<fdt.getAmbiguedad(d, "plan", "wind")<<endl << endl << endl << endl;
 
-	TreeNode root = fdt.construirArbol(d, "plan");
+	//TreeNode root = fdt.construirArbol(d, "plan");
 
-	fdt.printTree(root, "");
+	//fdt.printTree(root, "");
 
-	fdt.guardaArbol(root,"","arbol.txt","");
+	//fdt.guardaArbol(root,"","arbol.txt","");
 
-	fdt.guardarReglas(root, "", "reglas.txt");
+	//fdt.guardarReglas(root, "", "reglas.txt");
 
-	vector<string> rules = fdt.generarReglas(root);
+	//vector<string> rules = fdt.generarReglas(root);
 
 
-	cout << endl << endl;
+	//cout << endl << endl;
 
-	cout << "imprimiendo reglas" << endl;
-	for (string &rule:rules)
-	{
-		cout << rule << endl;
-	}
+	//cout << "imprimiendo reglas" << endl;
+	//for (string &rule:rules)
+	//{
+	//	cout << rule << endl;
+	//}
 	
 
 //	Dataset d1;
@@ -240,6 +240,6 @@ int main()
 //		}
 //		cout << endl;
 //	}
-}
+//}
 
 
