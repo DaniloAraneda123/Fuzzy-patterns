@@ -25,6 +25,8 @@ public:
 
     double getAmbiguedad(Dataset dataset, string nombreClase, string nombreAtributo);
 
+    void guardarReporte(TreeNode root, string fileName, string ruta, float grado_verdad, double significancia);
+
     vector<string> generarReglas(TreeNode node);
 
     void printTree(TreeNode root, string tabs);

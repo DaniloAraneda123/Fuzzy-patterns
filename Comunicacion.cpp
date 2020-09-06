@@ -37,11 +37,12 @@ Dataset llenarDataSet(vector <string> header, vector<vector<double>> datos)
 
 void crearReporte(string ruta, map<vector<string>,vector<vector<string>>> datos, bool fuzzycmeans, bool id3Difuso,
                   bool itemFrecuente,int numero_clusters,int iteracion_fuzzycmeans, double error_fuzzy, double gradoFuzzy,
-                   double nivelVerdad,double nivelSignificacia,string variableClass, float minimo_support, float minimo_confianza)
+                   double nivelVerdad,double nivelSignificancia,string variableClass, float minimo_support, float minimo_confianza)
 {
 
     if (fuzzycmeans)
     {
+        cout << "Se inicia fuzzy C-Means" << endl;
         int one_hot_encoding = 1;
         vector<string> header = getHeaderFuzzyCMeans(datos, one_hot_encoding);
         vector<vector<double>> matriz = getDatosFuzzyCMeans(datos, one_hot_encoding);
@@ -50,11 +51,14 @@ void crearReporte(string ruta, map<vector<string>,vector<vector<string>>> datos,
         FuzzyCMeans fuzzyCMeans = FuzzyCMeans(nroDatos, numero_clusters, nroDimensiones, iteracion_fuzzycmeans, error_fuzzy, gradoFuzzy);
         fuzzyCMeans.setData(matriz);
         fuzzyCMeans.fcm(true);
-        fuzzyCMeans.guardarCentroides(ruta);
+        fuzzyCMeans.guardarReporte(ruta, iteracion_fuzzycmeans, error_fuzzy, gradoFuzzy);
+        cout << " " << endl;
+        cout << "Termina fuzzy C-Means" << endl;
     }
 
     if (id3Difuso) 
     {
+        cout << "Se inicia fuzzy ID3" << endl;
         //Retorna variables Linguisticas
         vector<string> header= getHeaderFuzzyID3(datos,1);
 
@@ -62,25 +66,33 @@ void crearReporte(string ruta, map<vector<string>,vector<vector<string>>> datos,
         vector<vector<double>>dataID3 = getDatosFuzzyID3(datos,1);
 
         Dataset baseDatos=llenarDataSet(header, dataID3);
-        FuzzyID3 fdt (nivelVerdad, nivelSignificacia);
+        FuzzyID3 fdt (nivelVerdad, nivelSignificancia);
+
+        cout << "Se construye el arbol  ................" << endl;
+        cout << "\n";
         TreeNode root = fdt.construirArbol(baseDatos, variableClass);
         fdt.guardaArbol(root,ruta,"arbol.txt","");
         fdt.guardarReglas(root, "reglas.txt", "");
+        fdt.guardarReporte(root, "Reporte_FuzzyID3.txt", "",nivelVerdad, nivelSignificancia);
+
+        cout << " " << endl;
+        cout << "Termina fuzzy ID3" << endl;
     }
 
     if (itemFrecuente) 
     {
+        cout << " Se inicia Fuzzy A-Priori  " << endl;
         int one_hot_encoding = 1;
         int nroDatos1 = getNumeroDatos(datos);
         int nroDimensiones1 = getNumeroDimensiones(datos, one_hot_encoding);
         vector<vector<string>> matriz = getDatosItemFrecuente(datos, one_hot_encoding);
 
         ItemFrecuente itemFrecuente = ItemFrecuente(nroDimensiones1, nroDatos1, matriz, minimo_support, minimo_confianza);
-        itemFrecuente.guardarReglas(ruta);
+        itemFrecuente.guardarReporte(ruta, minimo_support, minimo_confianza);
 
-        cout << " Termino itemFrecuente " << endl;
+        cout << " Termina Fuzzy A-Priori  " << endl;
     }
-
+    
 }
 
 

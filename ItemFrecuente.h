@@ -24,7 +24,9 @@ using namespace std;
         vector<set<string>> lista_transaccion;
         vector<vector<string>> lista_item_frecuentes;
         vector<map<set<string>, float>> item_frecuentes;
-        map<set<string>, set<string>> reglas;
+        //map<set<string>, set<string>> reglas;
+        vector < set<string>> reglas_antecedente;
+        vector < set<string>> reglas_consecuente;
         vector<float> reglas_confianza;
 
         // Metodos de la clase
@@ -34,6 +36,7 @@ using namespace std;
         vector<set<string>> subconjuntos(set<string> conjunto);
         void obtenerItemFrecuentes();
         void obtenerReglas();
+      
    
 
     public:
@@ -41,5 +44,6 @@ using namespace std;
         // Metodos de la clase publicos
         ItemFrecuente(int numeroAtributos, int nroDatos, vector<vector<string>> datos, float minimo_support, float min_confianza);
         void guardarReglas(string ruta);
+        void guardarReporte(string ruta, double minimo_support, double minimo_confianza);
 
     };

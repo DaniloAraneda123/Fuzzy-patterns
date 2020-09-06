@@ -31,6 +31,11 @@ public:
 
 	double** fcm(bool verIteraciones);
 
+	
+
+	bool guardarReporte(string ruta, int iteracion_fuzzycmeans, double error_fuzzy, double gradoFuzzy);
+
+
 	bool guardarCentroides(string ruta);
 
 	void cargarCentroides(string matriz);

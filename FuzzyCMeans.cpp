@@ -82,6 +82,7 @@ El disenio por contranto aun no es documentando en el codigo.
 			}
 
 		} while (max_dif > epsilon && iteracion < iteraciones);
+		imprimirIteracion(max_dif, iteracion);
 		ejecucion = true;
 		return centroides;
 	}
@@ -93,13 +94,65 @@ El disenio por contranto aun no es documentando en el codigo.
 		{
 			ofstream archivo;
 			archivo.open(ruta+"centroides.txt");
-			archivo << num_clusters <<";"<<num_dimensiones<<"\n";
+			archivo << "Numero de clusters: " << num_clusters << "\n";
+			archivo << "Numero de dimensiones: "<< num_dimensiones << "\n";
 			for (int i = 0; i < num_clusters; i++) 
 			{
 				archivo << centroides[i][0];
 				for (int j = 1; j < num_dimensiones; j++)
 				{
 					archivo <<";"<<centroides[i][j];
+				}
+				archivo << "\n";
+			}
+
+			archivo.close();
+			return true;
+		}
+		return false;
+	}
+
+	bool FuzzyCMeans::guardarReporte(string ruta, int iteracion_fuzzycmeans, double error_fuzzy, double gradoFuzzy)
+	{
+		if (ejecucion == true)
+		{
+			ofstream archivo;
+			archivo.open("Reporte_FuzzyC-Means.txt");
+			archivo << "Numero de clusters:    " << num_clusters << "\n";
+			archivo << "Numero de dimensiones: " << num_dimensiones << "\n";
+			archivo << "Numero de iteraciones: " << iteracion_fuzzycmeans << "\n";
+			archivo << "Error                : " << error_fuzzy << "\n";
+			archivo << "Borrosidad           : " << gradoFuzzy << "\n";
+			archivo << "\n";
+			archivo << "\n";
+			for (int i = 0; i < num_clusters; i++)
+			{
+				archivo << "Cluster " << to_string(i + 1) << "  ";
+				archivo << centroides[i][0];
+				for (int j = 1; j < num_dimensiones; j++)
+				{
+					archivo << "  " << centroides[i][j];
+				}
+				archivo << "\n";
+			}
+			archivo << "\n";
+			archivo << "\n";
+			archivo << "\n";
+
+
+			archivo << "Grados de Pertenencias para los datos: "  << "\n";
+			archivo << "\n";
+			int max = 10;
+			for (int k = 0; k < num_clusters; k++) {
+				archivo << "cluster: "<< to_string(k+1) << "   ";
+			}
+			archivo << "\n";
+			for (int i = 0; i < max; i++)
+			{
+	
+				for (int j = 0; j < num_clusters; j++)
+				{
+					archivo << to_string(grado_pertenencia[i][j]) << "     ";
 				}
 				archivo << "\n";
 			}

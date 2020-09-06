@@ -40,57 +40,74 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 		aux_set.clear();
 	}
 }
-	void ItemFrecuente::guardarReglas(string ruta)
-	{
 
-		obtenerItemFrecuentes();
 
-		cout << "Termina la busqueda de ItemFrecuentes" << endl;
+void ItemFrecuente::guardarReporte(string ruta, double minimo_support, double minimo_confianza) {
 
-		obtenerReglas();
 
-		cout << "Termina la generacion de reglas" << endl;
 
-		map<set<string>, set<string>>::iterator it2;
-		ofstream archivo;
-		archivo.open(ruta + "reglas_asociativas.txt");
-		archivo << "Reglas asociativas" << "\n";
-		cout << reglas.size();
-		int cont = 0;
-		int por_reglas = 0;
-		for (it2 = reglas.begin(); it2 != reglas.end(); it2++) {
-			archivo << "Si  ";
-			cont = 0;
-			for (const auto& e : it2->first){
-				cont += 1;
-				if (cont == it2->first.size()) {
-					archivo << e;
-				}
-				else {
-					archivo << e << " y ";
-				}
-				
+
+	obtenerItemFrecuentes();
+
+	cout << "Termina la busqueda de ItemFrecuentes" << endl;
+
+	obtenerReglas();
+
+	cout << "Termina la generacion de reglas" << endl;
+
+	vector<set<string>> it2;
+	ofstream archivo;
+	archivo.open("Reporte_FuzzyItemFrecuente.txt");
+	archivo << "Reglas asociativas derivadas de algoritmo A-Priori Difuso" << "\n";
+	archivo << "\n";
+	archivo << "Umbral de Support  : " << minimo_support << "\n";
+	archivo << "Umbral de Confianza: " << minimo_confianza << "\n";
+	archivo << "\n";
+	archivo << "\n";
+	archivo << "\n";
+	int cont = 0;
+	set<string> antecedente;
+	set<string> consecuente;
+	float confianza;
+
+
+
+	for (int i = 0; i < reglas_confianza.size(); i++) {
+
+		antecedente = reglas_antecedente.at(i);
+		confianza = reglas_confianza.at(i);
+		consecuente = reglas_consecuente.at(i);
+		archivo << "IF ";
+		cont = 0;
+		for (auto e : antecedente) {
+			cont += 1;
+			if (cont == antecedente.size()) {
+				archivo << e;
 			}
-			cont = 0;
-			archivo << "  Entonces  ";
-			for (const auto& d : it2->second) {
-				cont += 1;
-				if (cont == it2->second.size()) {
-					archivo << d  ;
-					//archivo << reglas_confianza.at(por_reglas);
-				}
-				else {
-					archivo << d << " y ";
-				}
-				
+			else {
+				archivo << e << " AND ";
 			}
-			archivo << "\n";
-			por_reglas += 1;
+		}
+		cont = 0;
+		archivo << "  THEN ";
+		for (auto d : consecuente) {
+			cont += 1;
+			if (cont == consecuente.size()) {
+				archivo << d;
+				archivo << "     RC: ( ";
+				archivo << confianza;
+				archivo << " )";
+			}
+			else {
+				archivo << d << " AND ";
+			}
 		}
 
-				
-		archivo.close();
+		archivo << "\n";
+
 	}
+	archivo.close();
+}
 
 
 
@@ -125,6 +142,67 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 		return item_frecuente;
 		
 	}
+
+
+	void ItemFrecuente::guardarReglas(string ruta)
+	{
+
+		obtenerItemFrecuentes();
+
+		cout << "Termina la busqueda de ItemFrecuentes" << endl;
+
+		obtenerReglas();
+
+		cout << "Termina la generacion de reglas" << endl;
+
+		vector<set<string>> it2;
+		ofstream archivo;
+		archivo.open(ruta + "reglas_asociativas.txt");
+		archivo << "Reglas asociativas" << "\n";
+		int cont = 0;
+		set<string> antecedente;
+		set<string> consecuente;
+		float confianza;
+
+
+
+		for (int i = 0; i < reglas_confianza.size(); i++) {
+
+			antecedente = reglas_antecedente.at(i);
+			confianza = reglas_confianza.at(i);
+			consecuente = reglas_consecuente.at(i);
+			archivo << "IF ";
+			cont = 0;
+			for (auto e : antecedente) {
+				cont += 1;
+				if (cont == antecedente.size()) {
+					archivo << e;
+				}
+				else {
+					archivo << e << " y ";
+				}
+			}
+			cont = 0;
+			archivo << "  THEN ";
+			for (auto d : consecuente) {
+				cont += 1;
+				if (cont == consecuente.size()) {
+					archivo << d;
+					archivo << "     RC: ( ";
+					archivo << confianza;
+					archivo << " )";
+				}
+				else {
+					archivo << d << " y ";
+				}
+			}
+
+			archivo << "\n";
+
+		}
+		archivo.close();
+	}
+
 
 	void ItemFrecuente::obtenerItemFrecuentes()
 	{
@@ -196,7 +274,7 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 		float confianza;
 
 		for (int i = 0; i < item_frecuentes.size(); i++) {
-			cout << "ItemFrecuente: " << i << item_frecuentes.size()  << "Completado" << endl;
+			cout << "ItemFrecuente: " << i  << "Completado" << endl;
 			for (it = item_frecuentes.at(i).begin(); it != item_frecuentes.at(i).end(); it++)
 			{
 				if ((it->first).size() > 1) {
@@ -214,10 +292,11 @@ ItemFrecuente::ItemFrecuente(int _nroAtributos, int _nroDatos, vector<vector<str
 								confianza = obtenerSupportSet(xy) / obtenerSupportSet(antecedente);
 							}
 	
-							if (confianza >= min_confianza ) {
+							if (confianza > min_confianza ) {
 
 								
-								reglas.insert({ antecedente, consecuente });
+								reglas_antecedente.push_back(antecedente);
+								reglas_consecuente.push_back(consecuente);
 								reglas_confianza.push_back(confianza);
 							}
 							antecedente.clear();

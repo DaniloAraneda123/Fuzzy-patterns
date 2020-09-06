@@ -15,7 +15,7 @@ using namespace std;
 
     FuzzyID3::FuzzyID3(double truthLevel, double significantLevel)
     {
-        nivelVerdad = truthLevel;
+        nivelVerdad = min(0.99999, truthLevel); 
         nivelSignificacia = significantLevel;
     }
 
@@ -501,7 +501,14 @@ using namespace std;
 
         if (node.isHoja()) 
         { 
-            return prefix+" THEN "+ node.getTitulo()+ " ( "+to_string(node.getValue())+" )\n" ;
+            if (to_string(node.getValue()) != "inf")
+            {
+                return prefix + " THEN " + node.getTitulo() + " ( " + to_string(node.getValue()) + " )\n";
+            }
+            else
+            {
+                return prefix + " THEN " + node.getTitulo() + " ( " + to_string(0) + " )\n";
+            }
         }
         else if (node.isRoot()) 
         {
@@ -538,7 +545,14 @@ using namespace std;
             TreeNode node = children[i];
             if (node.isHoja()) 
             {
-                cout << tabs + "\t\t" + "[" + node.getTitulo() + "](" + to_string(node.getValue()) + ")"<<endl;
+                if (to_string(node.getValue())!="inf" )
+                {
+                    cout << tabs + "\t\t" + "[" + node.getTitulo() + "](" + to_string(node.getValue()) + ")" << endl;
+                }
+                else
+                {
+                    cout << tabs + "\t\t" + "[" + node.getTitulo() + "](" + to_string(0) + ")" << endl;
+                }
             }
             else if (node.getTipoNodo() == "VALOR") 
             {
@@ -589,7 +603,14 @@ using namespace std;
             TreeNode node = children[i];
             if (node.isHoja()) 
             {
-                s += (tabs + "\t\t" + "[" + node.getTitulo() + "](" +  to_string(node.getValue()) + ")") + "\r\n";
+                if (to_string(node.getValue()) != "inf")
+                {
+                    s += (tabs + "\t\t" + "[" + node.getTitulo() + "](" + to_string(node.getValue()) + ")") + "\r\n";
+                }
+                else
+                {
+                    s += (tabs + "\t\t" + "[" + node.getTitulo() + "](" + to_string(0) + ")") + "\r\n";
+                }
             }
             else if (node.getTipoNodo() == "VALOR") 
             {
@@ -635,4 +656,23 @@ using namespace std;
             classVals[classIdx] = max(v, classVals[classIdx]);
         }
         return classVals;
+    }
+
+    void FuzzyID3::guardarReporte(TreeNode root, string fileName, string ruta, float grado_verdad, double significancia) {
+
+        ofstream archivo;
+        archivo.open(ruta + fileName);
+        archivo << "Umbral Grado de Verdad: " << grado_verdad << "\n";;
+        archivo << "Umbral Significancia  : " << significancia << "\n";
+        archivo << "\n";
+        archivo << "\n";
+        archivo << "Reglas Generadas por los datos:";
+        archivo << "\n";
+        archivo << "\n";
+        vector<string> lista = generarReglas(root);
+        for (string& s : lista)
+        {
+            archivo << s + "\n";
+        }
+        archivo.close();
     }

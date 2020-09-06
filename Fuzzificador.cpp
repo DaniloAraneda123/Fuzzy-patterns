@@ -353,32 +353,28 @@ int getNumeroDimensiones(map<vector<string>, vector<vector<string>>> datos, int 
 }
 vector<string> getHeaderFuzzyCMeans(map<vector<string>, vector<vector<string>>> datos, int one_hot_encoding) 
 {
-    vector<string> header;
-    if (one_hot_encoding) {
+        vector<string> header;
         map<int, vector<string>> one_hot_n = getOneHotEncodingValores(datos);
         vector<vector<double>> resultados;
         vector<double> fila;
         vector<vector<string>> aux;
         vector<string> valores;
         aux = datos.begin()->second;
-        for (int j = 0; j < aux[0].size(); j++) {
+        int j = 0;
+        while (j < aux[0].size()) {
             if (!is_number(aux[0][j])) {
-                valores = one_hot_n[j];
-                for (int k = 0; k < valores.size(); k++) {
-                    header.push_back(datos.begin()->first.at(j) + " " + valores[k]);
-                }
+                //cout << aux[i][j] + "valor  ";
+                j = j + 1;
             }
             else {
                 header.push_back(datos.begin()->first.at(j));
+                j = j + 1;
+                //cout << fila[j] << "  ";
             }
         }
         return header;
-    }
-    else {
-        return datos.begin()->first;
-    }
+   }
 
-}
 
 
 vector<vector<double>> getDatosFuzzyCMeans(map<vector<string>, vector<vector<string>>> datos, int one_hot_encoding) {
@@ -390,47 +386,24 @@ vector<vector<double>> getDatosFuzzyCMeans(map<vector<string>, vector<vector<str
     vector<vector<string>> aux;
     vector<string> valores;
     aux = datos.begin()->second;
-
-    if (one_hot_encoding) {
-        for (int i = 0; i < aux.size(); i++) {
-            for (int j = 0; j < aux[i].size(); j++) {
-                if (!is_number(aux[i][j])){
+    int j = 0;
+    for (int i = 0; i < aux.size(); i++) {
+        j = 0;
+        while (j <  aux[i].size()) {
+            if (!is_number(aux[i][j])){
                     //cout << aux[i][j] + "valor  ";
-                    valores = one_hot_n[j];
-                    for (int k = 0; k < valores.size(); k++) {
-                        if (aux[i][j] == valores[k]) {
-                            fila.push_back(1);
-
-                           // cout << fila[j] << "  ";
-                        }
-                        else {
-                            fila.push_back(0);
-
-                            //cout << fila[j] << "  ";
-                        }
-                    }
-                }
-                else {
-                    fila.push_back(stod(aux[i][j]));
-
-                    //cout << fila[j] << "  ";
-                }
+                j = j + 1;
             }
-            resultados.push_back(fila);
-
-            cout << "\n" << endl;
-            fila.clear();
-        }
-    }
-    else {
-        for (int i = 0; i < aux.size(); i++) {
-            for (int j = 0; j < aux[i].size(); j++) {
+            else {
                 fila.push_back(stod(aux[i][j]));
+                j = j + 1;
+                    //cout << fila[j] << "  ";
             }
-            resultados.push_back(fila);
-            fila.clear();
         }
+        resultados.push_back(fila);
 
+            //cout << "\n" << endl;
+        fila.clear();
     }
     return resultados;
 }
